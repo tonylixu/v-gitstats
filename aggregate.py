@@ -36,6 +36,36 @@ def generateAggregate(arrToTSV):
         master['projects'].append(proj_name)
         return master
 
+    def processReportPeriod(reportData, master):
+        """Processes the Report periods (beginning and end) and writes them to master
+
+        Splits the Report period string into the 2 dates, then compares them to the youngest/oldest 
+        dates in the master.
+
+        Arguments:
+            reportData {dict} -- contains this projects report period string
+            master {dict} -- the master data container
+
+        Returns:
+            the master dictionary
+        """
+        dates = reportData['data'].split("to")
+        begin = dates[0]
+        end = dates[1]
+        print("REPORT PERIOD BEGIN \nyoungest: {0}\noldest: {1} ").format(
+            master['report_period']['youngest'], master['report_period']['oldest']
+        )
+
+        if begin < master['report_period']['youngest'] or master['report_period']['youngest'] == 0:
+            master['report_period']['youngest'] = begin
+        if end > master['report_period']['oldest'] or master['report_period']['oldest'] == 0:
+            master['report_period']['oldest'] = end
+        print("REPORT PERIOD AFTER \nyoungest: {0}\noldest: {1} ".format(
+            master['report_period']['youngest'], master['report_period']['oldest']))
+
+        return master
+
+
     # Defaults, this json gets passed to each function
     master = {
         "projects": [],
